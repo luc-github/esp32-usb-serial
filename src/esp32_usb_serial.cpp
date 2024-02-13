@@ -19,13 +19,25 @@
 #include "usb/vcp_ch34x.hpp"
 #include "usb/vcp_cp210x.hpp"
 #include "usb/vcp_ftdi.hpp"
-#include "usb_serial_def.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 static usb_phy_handle_t phy_hdl = NULL;
 static TaskHandle_t usb_serial_xHandle = NULL;
+
+#ifndef ESP_USB_LIB_TASK_SIZE
+#define ESP_USB_LIB_TASK_SIZE 4096
+#endif //ESP_USB_LIB_TASK_SIZE
+
+#ifndef ESP_USB_LIB_TASK_CORE
+#define ESP_USB_LIB_TASK_CORE 1
+#endif //ESP_USB_LIB_TASK_CORE
+
+#ifndef ESP_USB_LIB_TASK_PRIORITY
+#define ESP_USB_LIB_TASK_PRIORITY 10
+#endif //ESP_USB_LIB_TASK_PRIORITY
+
 
 /**
  * @brief USB Host library handling task
@@ -127,9 +139,9 @@ esp_err_t usb_serial_create_task() {
   // Create a task that will handle USB library events
 
   BaseType_t res =
-      xTaskCreatePinnedToCore(usb_lib_task, "usb_lib", ESP3D_USB_LIB_TASK_SIZE,
-                              NULL, ESP3D_USB_LIB_TASK_PRIORITY,
-                              &usb_serial_xHandle, ESP3D_USB_LIB_TASK_CORE);
+      xTaskCreatePinnedToCore(usb_lib_task, "usb_lib", ESP_USB_LIB_TASK_SIZE,
+                              NULL, ESP_USB_LIB_TASK_PRIORITY,
+                              &usb_serial_xHandle, ESP_USB_LIB_TASK_CORE);
   if (res == pdPASS && usb_serial_xHandle) {
     ESP_LOGD("USB_SERIAL","Installing CDC-ACM driver");
     if (cdc_acm_host_install(NULL) == ESP_OK) {
