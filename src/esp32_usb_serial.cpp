@@ -20,9 +20,7 @@
 #include "usb/vcp_cp210x.hpp"
 #include "usb/vcp_ftdi.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 static usb_phy_handle_t phy_hdl = NULL;
 static TaskHandle_t usb_serial_xHandle = NULL;
 
@@ -162,7 +160,3 @@ esp_err_t usb_serial_create_task() {
 
   return ESP_FAIL;
 }
-
-#ifdef __cplusplus
-}
-#endif
