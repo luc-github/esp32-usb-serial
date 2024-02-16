@@ -1,6 +1,6 @@
 /*
-Sample code to use the esp32-usb-serial library
-  Copyright (c) 2022 Luc Lebosse. All rights reserved.
+  Sample code to use the esp32-usb-serial library
+3 Copyright (c) 2023 Luc Lebosse. All rights reserved.
 
   This code is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public

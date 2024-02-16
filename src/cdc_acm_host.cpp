@@ -2,6 +2,7 @@
  * SPDX-FileCopyrightText: 2015-2021 Espressif Systems (Shanghai) CO LTD
  *
  * SPDX-License-Identifier: Apache-2.0
+ * Modified by Luc Lebosse 2023 to be used in esp32-usb-serial library (porting C code to C++)
  */
 
 #include "usb/cdc_acm_host.h"
