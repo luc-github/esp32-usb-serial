@@ -892,7 +892,7 @@ esp_err_t cdc_acm_host_open(uint16_t vid, uint16_t pid, uint8_t interface_idx,
   if(ESP_OK!=cdc_acm_find_and_open_usb_device(
                         vid, pid, dev_config->connection_timeout_ms, &cdc_dev)){
       exit_flag = true;
-      ESP_LOGE(TAG, "USB device with VID: 0x%04X, PID: 0x%04X not found", vid, pid);
+      ESP_LOGD(TAG, "USB device with VID: 0x%04X, PID: 0x%04X not found", vid, pid);
 
     } else {
 
@@ -976,7 +976,7 @@ esp_err_t cdc_acm_host_open_vendor_specific(
       vid, pid, dev_config->connection_timeout_ms, &cdc_dev);
   if (ESP_OK != ret) {
     exit_flag = true;
-    ESP_LOGE(TAG, "USB device with VID: 0x%04X, PID: 0x%04X not found", vid,
+    ESP_LOGD(TAG, "USB device with VID: 0x%04X, PID: 0x%04X not found", vid,
              pid);
   } else {
 

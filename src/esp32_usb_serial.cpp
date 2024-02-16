@@ -59,7 +59,7 @@ void usb_lib_task(void *arg) {
       }
     }
     if (event_flags & USB_HOST_LIB_EVENT_FLAGS_ALL_FREE) {
-      ESP_LOGE("USB_SERIAL","USB: All devices freed");
+      ESP_LOGD("USB_SERIAL","USB: All devices freed");
       // Continue handling USB events to allow device reconnection
     }
   }
