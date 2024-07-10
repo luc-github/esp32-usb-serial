@@ -116,8 +116,6 @@ esp_err_t usb_serial_init() {
       .otg_speed =
           USB_PHY_SPEED_UNDEFINED,  // In Host mode, the speed is determined by
                                     // the connected device
-      .ext_io_conf = NULL,
-      .otg_io_conf = NULL,
   };
   if (ESP_OK != usb_new_phy(&phy_config, &phy_hdl)) {
     ESP_LOGE("USB_SERIAL","Failed to init USB PHY");
