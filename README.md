@@ -1,7 +1,7 @@
 # esp32-usb-serial
 Arduino Library to use USB as OTG on ESP32 capable devices based on espressif IDF components
 
-The code use the folloowing versions of the components:
+The code use the following versions of the components:
 ```
 ## IDF Component Manager Manifest File
 dependencies:
