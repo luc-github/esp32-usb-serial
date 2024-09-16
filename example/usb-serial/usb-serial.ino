@@ -117,10 +117,10 @@ void connectDevice() {
   if (vcp->line_coding_set(&line_coding) == ESP_OK) {
     Serial.println("USB Connected");
     isConnected = true;
-    uint16_t vid = getVID();
-    uint16_t pid = getPID();
+    uint16_t vid = esp_usb::getVID();
+    uint16_t pid = esp_usb::getPID();
     Serial.printf("USB device with VID: 0x%04X (%s), PID: 0x%04X (%s) found\n",
-                  vid, getVIDString(), pid, getPIDString());
+                  vid, esp_usb::getVIDString(), pid, esp_usb::getPIDString());
     xSemaphoreTake(device_disconnected_sem, portMAX_DELAY);
     vTaskDelay(10);
 

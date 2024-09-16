@@ -50,11 +50,11 @@ static TaskHandle_t usb_serial_xHandle = NULL;
 #define ESP_USB_LIB_TASK_PRIORITY 10
 #endif //ESP_USB_LIB_TASK_PRIORITY
 
-uint16_t getVID(){
+uint16_t esp_usb::getVID(){
     return esp_usb::current_vid;
 }
 
-const char * getVIDString(){
+const char * esp_usb::getVIDString(){
     switch (esp_usb::current_vid){
         case 0x10C4:
             return "CP210X";
@@ -71,11 +71,11 @@ const char * getVIDString(){
     return "None";
 }
 
-uint16_t getPID(){
+uint16_t esp_usb::getPID(){
     return esp_usb::current_pid;
 }
 
-const char * getPIDString() {
+const char * esp_usb::getPIDString() {
     switch (esp_usb::current_pid){
         case 0x7522:
         case 0x7523:
