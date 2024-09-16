@@ -23,9 +23,6 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include "freertos/task.h"
-#include "usb/cdc_acm_host.h"
-#include "usb/usb_host.h"
-#include "usb/vcp.hpp"
 
 #define ESP_USB_SERIAL_BAUDRATE 115200
 #define ESP_USB_SERIAL_DATA_BITS (8)
@@ -39,7 +36,6 @@
 #define ESP_USB_SERIAL_TASK_SIZE 4096
 #define ESP_USB_SERIAL_TASK_CORE 1
 #define ESP_USB_SERIAL_TASK_PRIORITY 10
-
 
 SemaphoreHandle_t device_disconnected_sem;
 std::unique_ptr<CdcAcmDevice> vcp;
@@ -63,7 +59,8 @@ bool rx_callback(const uint8_t *data, size_t data_len, void *arg) {
 void handle_event(const cdc_acm_host_dev_event_data_t *event, void *user_ctx) {
   switch (event->type) {
     case CDC_ACM_HOST_ERROR:
-      Serial.printf("CDC-ACM error has occurred, err_no = %d\n", event->data.error);
+      Serial.printf("CDC-ACM error has occurred, err_no = %d\n",
+                    event->data.error);
       break;
     case CDC_ACM_HOST_DEVICE_DISCONNECTED:
       Serial.println("Device suddenly disconnected");
@@ -71,7 +68,8 @@ void handle_event(const cdc_acm_host_dev_event_data_t *event, void *user_ctx) {
       isConnected = false;
       break;
     case CDC_ACM_HOST_SERIAL_STATE:
-      Serial.printf("Serial state notif 0x%04X\n", event->data.serial_state.val);
+      Serial.printf("Serial state notif 0x%04X\n",
+                    event->data.serial_state.val);
       break;
     case CDC_ACM_HOST_NETWORK_CONNECTION:
       Serial.println("Network connection established");
@@ -82,8 +80,7 @@ void handle_event(const cdc_acm_host_dev_event_data_t *event, void *user_ctx) {
   }
 }
 
-
-void connectDevice(){
+void connectDevice() {
   if (!usbReady || isConnected) {
     return;
   }
@@ -109,24 +106,28 @@ void connectDevice(){
   vcp = std::unique_ptr<CdcAcmDevice>(esp_usb::VCP::open(&dev_config));
 
   if (vcp == nullptr) {
-   Serial.println("Failed to open VCP device, retrying...");
-   return;
+    Serial.println("Failed to open VCP device, retrying...");
+    return;
   }
 
   vTaskDelay(10);
 
- Serial.println("USB detected");
+  Serial.println("USB detected");
 
   if (vcp->line_coding_set(&line_coding) == ESP_OK) {
     Serial.println("USB Connected");
     isConnected = true;
+    uint16_t vid = getVID();
+    uint16_t pid = getPID();
+    Serial.printf("USB device with VID: 0x%04X (%s), PID: 0x%04X (%s) found\n",
+                  vid, getVIDString(), pid, getPIDString());
     xSemaphoreTake(device_disconnected_sem, portMAX_DELAY);
     vTaskDelay(10);
+
     vcp = nullptr;
   } else {
     Serial.println("USB device not identified");
   }
-
 }
 
 // this task only handle connection
@@ -144,7 +145,7 @@ static void esp_usb_serial_connection_task(void *pvParameter) {
   vTaskDelete(NULL);
 }
 
- void handle(){
+void handle() {
   if (!usbReady) return;
   if (Serial.available()) {
     size_t size = Serial.available();
@@ -161,40 +162,38 @@ static void esp_usb_serial_connection_task(void *pvParameter) {
       free(data);
     }
   }
-
- }
+}
 
 void setup() {
   Serial.begin(115200);
-  if (ESP_OK!=usb_serial_init()){
+  if (ESP_OK != usb_serial_init()) {
     Serial.println("Initialisation failed");
   } else {
-	if(ESP_OK!=usb_serial_create_task())
-	{
-		Serial.println("Task Creation failed");
-	} else {
-    Serial.println("Success");
-	}
-  device_disconnected_sem = xSemaphoreCreateBinary();
-  if (device_disconnected_sem == NULL) {
-    Serial.println("Semaphore creation failed");
-    return;
-   }
-   BaseType_t res = xTaskCreatePinnedToCore(
-      esp_usb_serial_connection_task, "esp_usb_serial_task",
-      ESP_USB_SERIAL_TASK_SIZE, NULL, ESP_USB_SERIAL_TASK_PRIORITY,
-      &xHandle, ESP_USB_SERIAL_TASK_CORE);
-  if (res != pdPASS || !xHandle) {
-        Serial.println("Task creation failed");
-        return;
-      }
+    if (ESP_OK != usb_serial_create_task()) {
+      Serial.println("Task Creation failed");
+    } else {
+      Serial.println("Success");
+    }
+    device_disconnected_sem = xSemaphoreCreateBinary();
+    if (device_disconnected_sem == NULL) {
+      Serial.println("Semaphore creation failed");
+      return;
+    }
+    BaseType_t res = xTaskCreatePinnedToCore(
+        esp_usb_serial_connection_task, "esp_usb_serial_task",
+        ESP_USB_SERIAL_TASK_SIZE, NULL, ESP_USB_SERIAL_TASK_PRIORITY, &xHandle,
+        ESP_USB_SERIAL_TASK_CORE);
+    if (res != pdPASS || !xHandle) {
+      Serial.println("Task creation failed");
+      return;
+    }
     Serial.println("USB Serial Connection Task created successfully");
   }
   usbReady = true;
 }
 
 void loop() {
-if (usbReady) {
-  handle();
-}
+  if (usbReady) {
+    handle();
+  }
 }

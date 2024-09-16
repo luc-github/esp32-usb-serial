@@ -14,6 +14,10 @@ static const char *TAG = "VCP service";
 
 namespace esp_usb {
 std::vector<VCP::vcp_driver> VCP::drivers;
+// To 
+uint16_t current_vid = 0;
+uint16_t current_pid = 0;
+
 CdcAcmDevice *VCP::open(uint16_t _vid, uint16_t _pid, const cdc_acm_host_device_config_t *dev_config, uint8_t interface_idx)
 {
     // In case user didn't install CDC-ACM driver, we try to install it here.
@@ -69,8 +73,18 @@ CdcAcmDevice *VCP::open(const cdc_acm_host_device_config_t *dev_config, uint8_t 
         for (vcp_driver drv : drivers) {
             for (uint16_t pid : drv.pids) {
                 try {
-                    return drv.open(pid, &_config, interface_idx);
+                    CdcAcmDevice * ptr = drv.open(pid, &_config, interface_idx);
+                    if (ptr){
+                        current_vid = drv.vid;
+                        current_pid = pid;
+                    } else {
+                        current_vid = 0;
+                        current_pid = 0;
+                    }
+                    return ptr;
                 } catch (esp_err_t &e) {
+                    current_vid = 0;
+                    current_pid = 0;
                     switch (e) {
                     case ESP_ERR_NOT_FOUND: break;
                     case ESP_ERR_NO_MEM: throw std::bad_alloc();

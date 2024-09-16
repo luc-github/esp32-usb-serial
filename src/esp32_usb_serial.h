@@ -19,6 +19,9 @@
 
 #pragma once
 
+#include "usb/cdc_acm_host.h"
+#include "usb/usb_host.h"
+#include "usb/vcp.hpp"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -28,18 +31,16 @@ extern "C" {
  *********************/
 #include <stdbool.h>
 #include <stdint.h>
-#include "esp_err.h"
 
+#include "esp_err.h"
 
 /*********************
  *      DEFINES
  *********************/
 
-
 /**********************
  *      TYPEDEFS
  **********************/
-
 
 /**********************
  * GLOBAL PROTOTYPES
@@ -49,6 +50,11 @@ esp_err_t usb_serial_init();
 esp_err_t usb_serial_deinit();
 esp_err_t usb_serial_create_task();
 esp_err_t usb_serial_delete_task();
+
+uint16_t getVID();
+const char* getVIDString();
+uint16_t getPID();
+const char* getPIDString();
 
 /**********************
  *      MACROS

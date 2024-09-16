@@ -11,6 +11,8 @@
 #include "usb/cdc_acm_host.h"
 
 namespace esp_usb {
+extern uint16_t current_vid;
+extern uint16_t current_pid;
 /**
  * @brief Virtual COM Port Service Class
  *

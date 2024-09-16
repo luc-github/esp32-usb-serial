@@ -50,6 +50,60 @@ static TaskHandle_t usb_serial_xHandle = NULL;
 #define ESP_USB_LIB_TASK_PRIORITY 10
 #endif //ESP_USB_LIB_TASK_PRIORITY
 
+uint16_t getVID(){
+    return esp_usb::current_vid;
+}
+
+const char * getVIDString(){
+    switch (esp_usb::current_vid){
+        case 0x10C4:
+            return "CP210X";
+            break;
+        case 0x1A86:
+            return "CH34X";
+            break;
+        case 0X0403:
+            return "FTDI";
+            break;
+        default:
+            break;
+    };
+    return "None";
+}
+
+uint16_t getPID(){
+    return esp_usb::current_pid;
+}
+
+const char * getPIDString() {
+    switch (esp_usb::current_pid){
+        case 0x7522:
+        case 0x7523:
+            return "CH340";
+            break;
+        case 0x341:
+            return "CH341";
+            break;
+        case 0xEA60:
+            return "CP2101-CP2104";
+            break;
+        case 0xEA70:
+            return "CP2105";
+            break;
+        case 0xEA71:
+            return "CP2108";
+            break;
+        case 0x6001:
+            return "FT232";
+            break;
+        case 0x6015:
+            return "FT231";
+            break;
+        default:
+            break;
+    };
+    return "None";
+}
 
 /**
  * @brief USB Host library handling task
