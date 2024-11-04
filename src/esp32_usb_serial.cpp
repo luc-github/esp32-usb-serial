@@ -151,7 +151,7 @@ esp_err_t usb_serial_deinit() {
   // this one failed with ESP_ERR_INVALID_STATE if USB is connected
   if (ret != ESP_OK) {
     ESP_LOGE("USB_SERIAL","Failed to unsinstall usb host %s",
-                esp_err_to_name(usb_host_uninstall()));
+                esp_err_to_name(ret));
   }
   // Deinitialize the internal USB PHY
   ret = usb_del_phy(phy_hdl);
