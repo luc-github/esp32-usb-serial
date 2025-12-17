@@ -1,4 +1,4 @@
-# esp32-usb-serial
+# esp32-usb-serial ![Version](https://img.shields.io/badge/dynamic/json?label=Version&query=$.version&url=https://raw.githubusercontent.com/luc-github/esp32-usb-serial/refs/heads/main/info.json)
 Arduino Library to use USB as OTG on ESP32 capable devices based on espressif IDF components
 
 The code use the following versions of the components:
@@ -23,7 +23,7 @@ Tested on ESP32S3, but should work on S2 based devices.
 
 The sample code is a simple USB<->Serial bridge, it reads from the USB and writes to the Serial and viceversa.
 
-I need IDF 5.1 to use the USB Host VCP component, so I had to use the latest version of the arduino-esp32 core, which is 3.0.0-alpha3 at the time of writing this.
+Tested with [![IDF 5.1.4](https://img.shields.io/badge/IDF-v5.1.4-blue?style=plastic&label=IDF&logo=espressif)](https://github.com/espressif/esp-idf)
 
 > [!IMPORTANT]  
 >
